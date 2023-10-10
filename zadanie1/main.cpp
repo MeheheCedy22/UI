@@ -3,27 +3,27 @@
 
 //init state examples
 
-//    {6, 2, 0, 1, 5, 3, 4, 7, 8};
-//    {1, 2, 3, 4, 6, 8, 7, 5, 0};
-//    {7, 3, 5, 2, 4, 1, 8, 6, 0};
-//    {2, 3, 8, 7, 1, 5, 0, 4, 6};
-//    {2, 4, 3, 1, 6, 8, 0, 7, 5};
-//    {4, 1, 6, 7, 3, 2, 0, 5, 8};
-//    {1, 2, 3, 7, 4, 8, 0, 6, 5};
-//    {1, 3, 0, 4, 2, 8, 7, 6, 5};
-//    {1, 2, 3, 8, 0, 5, 4, 7, 6};
-//    {4, 2, 3, 7, 1, 8, 5, 6, 0};
+//  1  {6, 2, 0, 1, 5, 3, 4, 7, 8};
+//  2  {1, 2, 3, 4, 6, 8, 7, 5, 0};
+//  3  {7, 3, 5, 2, 4, 1, 8, 6, 0};
+//  4  {2, 3, 8, 7, 1, 5, 0, 4, 6};
+//  5  {2, 4, 3, 1, 6, 8, 0, 7, 5};
+//  6  {4, 1, 6, 7, 3, 2, 0, 5, 8};
+//  7  {1, 2, 3, 7, 4, 8, 0, 6, 5};
+//  8  {1, 3, 0, 4, 2, 8, 7, 6, 5};
+//  9  {1, 2, 3, 8, 0, 5, 4, 7, 6};
+//  10  {4, 2, 3, 7, 1, 8, 5, 6, 0};
 
-//    {1, 3, 5, 4, 8, 2, 7, 6, 0};
-//    {1, 7, 2, 5, 0, 3, 6, 4, 8};
-//    {0, 1, 3, 4, 2, 5, 7, 8, 6};
-//    {4, 1, 2, 7, 0, 3, 6, 8, 5};
-//    {4, 2, 3, 5, 1, 6, 0, 7, 8};
-//    {4, 1, 3, 2, 0, 6, 7, 5, 8};
-//    {0, 2, 6, 1, 3, 8, 7, 4, 5};
-//    {1, 3, 6, 2, 0, 4, 7, 8, 5};
-//    {2, 3, 5, 7, 1, 4, 0, 8, 6};
-//    {3, 6, 8, 1, 0, 2, 5, 4, 7};
+//  11  {1, 3, 5, 4, 8, 2, 7, 6, 0};
+//  12  {1, 7, 2, 5, 0, 3, 6, 4, 8};
+//  13  {0, 1, 3, 4, 2, 5, 7, 8, 6};
+//  14  {4, 1, 2, 7, 0, 3, 6, 8, 5};
+//  15  {4, 2, 3, 5, 1, 6, 0, 7, 8};
+//  16  {4, 1, 3, 2, 0, 6, 7, 5, 8};
+//  17  {0, 2, 6, 1, 3, 8, 7, 4, 5};
+//  18  {1, 3, 6, 2, 0, 4, 7, 8, 5};
+//  19  {2, 3, 5, 7, 1, 4, 0, 8, 6};
+//  20  {3, 6, 8, 1, 0, 2, 5, 4, 7};
 
 //goal state
 
@@ -31,32 +31,36 @@
 
 void compute(string heuristic_pass)
 {
-    // manual input
 
-//    int state[N]{};
-//    int goal[N]{};
-//
-//    cout << "Matrix 3x3: " << endl;
-//    cout << "Number '0' represents the blank space" << endl;
-//    cout << "Enter the initial state of the puzzle" << endl;
-//    for(int i=0;i<N;i++)
-//    {
-//        cin >> state[i];
-//    }
-//
-//    cout << "Enter the goal state of the puzzle" << endl;
-//    for(int i=0;i<N;i++)
-//    {
-//        cin >> goal[i];
-//    }
-    // -----------------------------
+//          manual input
 
-    // faster testing input
+    int state[N]{};
+    int goal[N]{};
 
-    int state[N] = {1, 3, 6, 2, 0, 4, 7, 8, 5};
-    int goal[N] = {1,2,3,4,5,6,7,8,0};
-    // -----------------------------
-    
+    cout << "Matrix 3x3: " << endl;
+    cout << "Number '0' represents the blank space" << endl;
+    cout << "Enter the initial state of the puzzle" << endl;
+    // reading matrix input
+    for(int i=0;i<N;i++)
+    {
+        cin >> state[i];
+    }
+
+    cout << "Enter the goal state of the puzzle" << endl;
+    for(int i=0;i<N;i++)
+    {
+        cin >> goal[i];
+    }
+//     -----------------------------
+
+//          faster testing input
+
+//    int state[N] = {6, 2, 0, 1, 5, 3, 4, 7, 8};
+//    int goal[N] = {1,2,3,4,5,6,7,8,0};
+
+// -----------------------------
+
+
     Tree *tree = new Tree();
     tree->root = new Node(state, 0);
     Node *current = tree->root;
@@ -169,14 +173,18 @@ auto timeMeasure(string heuristic_pass)
 
 int main() {
 
+    cout << "Misplaced heuristic: " << endl;
     compute(MISPLACED);
+    cout << endl << endl;
+    cout << "Manhattan heuristic: " << endl;
     compute(MANHATTAN);
+    cout << endl << endl;
 
-    auto duration_miss = timeMeasure(MISPLACED);
-    auto duration_manh = timeMeasure(MANHATTAN);
-
-    cout << "Time for Misplaced: " << duration_miss << " microseconds" << endl;
-    cout << "Time for Manhattan: " << duration_manh << " microseconds" << endl;
+//    auto duration_miss = timeMeasure(MISPLACED);
+//    auto duration_manh = timeMeasure(MANHATTAN);
+//
+//    cout << "Time for Misplaced: " << duration_miss << " microseconds" << endl;
+//    cout << "Time for Manhattan: " << duration_manh << " microseconds" << endl;
 
     return 0;
 }
