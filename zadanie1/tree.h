@@ -266,10 +266,11 @@ public:
         int sum = 0;
         for(int i=0;i<N;i++)
         {
-            int x = state[i] % 3;
-            int y = state[i] / 3;
-            int x_goal = goal[i] % 3;
-            int y_goal = goal[i] / 3;
+            int temp_index = getIndex(state, goal[i]);
+            int x = temp_index % 3;
+            int y = temp_index / 3;
+            int x_goal = i % 3;
+            int y_goal = i / 3;
             sum += abs(x - x_goal) + abs(y - y_goal);
         }
         return sum;

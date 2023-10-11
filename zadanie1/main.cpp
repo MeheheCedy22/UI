@@ -29,6 +29,9 @@
 
 //    {1, 2, 3, 4, 5, 6, 7, 8, 0};
 
+
+// v mojej implementácii posúvame operátormi medzeru, teda 0
+
 void compute(string heuristic_pass)
 {
 
@@ -39,14 +42,18 @@ void compute(string heuristic_pass)
 
     cout << "Matrix 3x3: " << endl;
     cout << "Number '0' represents the blank space" << endl;
-    cout << "Enter the initial state of the puzzle" << endl;
+    cout << "Example: " << endl;
+    cout << "1 2 3" << endl;
+    cout << "4 5 6" << endl;
+    cout << "7 8 0" << endl;
+    cout << "Enter the initial state of the puzzle:" << endl;
     // reading matrix input
     for(int i=0;i<N;i++)
     {
         cin >> state[i];
     }
 
-    cout << "Enter the goal state of the puzzle" << endl;
+    cout << "Enter the goal state of the puzzle:" << endl;
     for(int i=0;i<N;i++)
     {
         cin >> goal[i];
@@ -55,7 +62,7 @@ void compute(string heuristic_pass)
 
 //          faster testing input
 
-//    int state[N] = {6, 2, 0, 1, 5, 3, 4, 7, 8};
+//    int state[N] = {3, 6, 8, 1, 0, 2, 5, 4, 7};
 //    int goal[N] = {1,2,3,4,5,6,7,8,0};
 
 // -----------------------------
