@@ -275,10 +275,13 @@ public:
         }
         return sum;
     }
-    static int misplacedSquares(const int state[], const int goal[]) {
+    static int misplacedSquares(const int state[], const int goal[])
+    {
         int sum = 0;
-        for (int i = 0; i < N; i++) {
-            if (state[i] != goal[i]) {
+        for (int i = 0; i < N; i++)
+        {
+            if (state[i] != goal[i])
+            {
                 sum += 1;
             }
         }

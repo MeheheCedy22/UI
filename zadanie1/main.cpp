@@ -129,11 +129,11 @@ void compute(string heuristic_pass)
     cout<< "Final: "<<endl;
     tree->printNode(final);
 
+    steps = final->depth;
     //backtracking of the taken steps
 
     while(final->prev != nullptr)
     {
-        steps++;
         switch(final->dir)
         {
             case UP:
