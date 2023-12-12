@@ -79,15 +79,15 @@ def manhattan_distance(p1, p2):
 
 
 def get_cost(points, medoids):
-    clusters = {i:[] for i in range(len(medoids))}
+    clusters = {i: [] for i in range(len(medoids))}
     cst = 0
     for d in points:
         dst = np.array([manhattan_distance(d, md) for md in medoids])
         c = dst.argmin()
         clusters[c].append(d)
-        cst+=dst.min()
+        cst += dst.min()
 
-    clusters = {k:np.array(v) for k,v in clusters.items()}
+    clusters = {k: np.array(v) for k, v in clusters.items()}
     return clusters, cst
 
 
