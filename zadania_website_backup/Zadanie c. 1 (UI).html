@@ -1,0 +1,505 @@
+
+<!-- saved from url=(0044)http://www2.fiit.stuba.sk/~kapustik/z2d.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
+<link rel="SHORTCUT ICON" href="http://www2.fiit.stuba.sk/~kapustik/UI3.ico">
+
+<title>Zadanie c. 1 (UI)</title>
+<style type="text/css">
+<!--
+td.a {font-weight: bold;
+ background: gray;
+ text-align: center;
+ height: 20px;
+ width: 20px;
+ border: 1pt solid black;}
+td.b {font-weight: bold;
+ text-align: center;
+ height: 20px;
+ width: 20px;
+ border: 1pt solid black;}
+-->
+</style>
+
+</head>
+<body bgcolor="#f0f4ff">
+<table style=" max-width: 624pt; min-width: 280pt; margin: auto; background-color: white;" border="0"><tbody><tr><td>
+<h2>Prehľadávanie stavového priestoru</h2>
+<h2>Zadanie č. 1
+<hr align="LEFT" width="130"></h2>
+Toto zadanie sa venuje niekoľkým základným algoritmom prehľadávania stavového 
+priestoru. Základná štruktúra algoritmu by mala byť podľa možností vyjadrená jednou funkciou.
+<p>
+V dokumentácii je potrebné uviesť použitý algoritmus a opísať vlastnosti tohto 
+algoritmu – teoretické aj skutočné – koľko naozaj rozvíja uzlov, koľko mu to trvá 
+a aké riešenie nájde. Použite <i>aspoň</i> dva rôzne príklady na hľadanie – 
+vzdialenosť do cieľa napríklad 6 a 10 krokov. Porovnajte dosiahnutý výsledok 
+pri zámene začiatočného a koncového uzla, ak to má zmysel (problém 2).
+</p><p>
+Základom hodnotenia je funkčnosť programu podľa špecifikácie a osobitná dokumentácia 
+k programu. Dokumentácia musí obsahovať:
+</p><ul>
+<li>riešený problém – názov špecifického zadania (a meno autora!)
+</li><li>stručný opis riešenia a jeho podstatných častí
+<ul>
+<li>reprezentáciu údajov problému, použitý <b><i>konkrétny</i></b> algoritmus
+</li></ul>
+</li><li>spôsob testovania a zhodnotenie riešenia
+<ul>
+<li>možnosti rozšírenia, prípadné optimalizácie, výhody a nevýhody konkrétnej 
+implementácie (aj či sú závislé alebo nezávislé na programovacom prostredí)
+</li><li>porovnanie vlastností použitých metód pre rôznu dĺžku riešenia 
+(u eulerovho koňa rôzne veľkosti šachovnice)
+</li></ul>
+</li></ul>
+<b><i>Do systému AIS je treba odovzdať</i></b> elektronickú verziu dokumentácie 
+plus okomentované zdrojové kódy. Najlepšie zabalené do jedného zip súboru.
+<p>
+Ďalej sa hodnotí:
+</p><ul>
+<li>efektívna a prehľadná implementácia algoritmu (včítane komentárov)
+</li><li>vhodné otestovanie činnosti algoritmu
+</li><li>možnosť spracovania hlavolamu m*n (iný než 3x3, problém 2)
+</li></ul>
+Nezabudnite, že <b><i>hlavným výstupom programu</i></b> je postupnosť
+krokov od začiatku k cieľu! (má byť reprezentovaná postupnosťou operátorov)
+<p>
+<b><i>K programu je potrebné dodať sadu testovacích príkladov!</i></b>
+Ak je program interpretovaný, môžu byť v tom istom súbore ako zdrojový kód.
+</p><p>
+Zadania
+<a href="http://www2.fiit.stuba.sk/~kapustik/z2d.html#A">a)</a>,
+<a href="http://www2.fiit.stuba.sk/~kapustik/z2d.html#B">b)</a>,
+<a href="http://www2.fiit.stuba.sk/~kapustik/z2d.html#C">c)</a>,
+<a href="http://www2.fiit.stuba.sk/~kapustik/z2d.html#D">d)</a>,
+<a href="http://www2.fiit.stuba.sk/~kapustik/z2d.html#E">e)</a>,
+<a href="http://www2.fiit.stuba.sk/~kapustik/z2d.html#F">f)</a>,
+<a href="http://www2.fiit.stuba.sk/~kapustik/z2d.html#G">g)</a>,
+<a href="http://www2.fiit.stuba.sk/~kapustik/z2d.html#S">s)</a>.
+<!-- <P><A HREF="http://www.fiit.stuba.sk/~polcicova/ui/priradenie_zadani.html">Pridelenie zadaní</A> -->
+</p><hr>
+<h2><font color="TEAL">Definovanie problému 1</font></h2>
+Úlohou je nájsť riešenie hlavolamu <b>Bláznivá križovatka</b>. Hlavolam je 
+reprezentovaný mriežkou, ktorá má rozmery 6 krát 6 políčok a obsahuje niekoľko 
+vozidiel (áut a nákladiakov) rozložených na mriežke tak, aby sa neprekrývali. 
+Všetky vozidlá majú šírku 1 políčko, autá sú dlhé 2 a nákladiaky sú dlhé 3 
+políčka. V prípade, že vozidlo nie je blokované iným vozidlom alebo okrajom 
+mriežky, môže sa posúvať dopredu alebo dozadu, nie však do strany, ani sa 
+nemôže otáčať. V jednom kroku sa môže pohybovať len jedno vozidlo. V prípade, 
+že je pred (za) vozidlom voľných <i>n</i> políčok, môže sa vozidlo pohnúť o 1 
+až <i>n</i> políčok dopredu (dozadu). Ak sú napríklad pred vozidlom voľné 3 
+políčka (napr. oranžové vozidlo na počiatočnej pozícii, obr. 1), to sa môže 
+posunúť buď o 1, 2 alebo 3 políčka.
+<p>
+Hlavolam je vyriešený, keď je červené auto (v smere jeho jazdy) na okraji 
+križovatky a môže sa z nej dostať von. Predpokladajte, že červené auto je 
+vždy otočené horizontálne a smeruje doprava. Je potrebné nájsť postupnosť 
+posunov vozidiel (nie pre všetky počiatočné pozície táto postupnosť existuje) 
+tak, aby sa červené auto dostalo von z križovatky alebo vypísať, že úloha nemá 
+riešenie. Príklad možnej počiatočnej a cieľovej  pozície je na obr. 1.
+</p><p>
+</p><center>
+<table>
+  <tbody><tr>
+    <td>Počiatočná pozícia</td>
+    <td>Cieľová pozícia</td><td>
+  </td></tr>
+  <tr>
+    <td><img src="./Zadanie c. 1 (UI)_files/krizovatky.gif"></td>
+    <td><img src="./Zadanie c. 1 (UI)_files/krizovatky_ciel.gif"></td>
+  </tr>
+</tbody></table>
+<p>
+Obr. 1 Počiatočná a cieľová pozícia hlavolamu Bláznivá križovatka.
+</p></center>
+
+<p>
+Postupnosť posunov vozidiel z počiatočnej do cieľovej pozície z obr.1 je:
+</p><pre>VPRAVO(oranzove, 1), HORE(zlte, 1), HORE(fialove, 1), VLAVO(sive, 3),
+VLAVO(svetlomodre, 2), DOLE(tmavomodre, 3), DOLE(zelene, 2), VPRAVO(cervene, 3)</pre>
+<p>
+</p><h3><font color="TEAL">Implementácia 1</font></h3>
+Keď chceme túto úlohu riešiť algoritmami prehľadávania stavového priestoru, 
+musíme si konkretizovať niektoré pojmy. Uvádzame príklad reprezentácie stavu, 
+opis operátorov a cieľového stavu.
+<dl>
+<dt><h4><font color="BLUE">STAV</font></h4></dt>
+<dd>
+Stav predstavuje aktuálne rozloženie vozidiel. Potrebujeme si pamätať farbu 
+každého vozidla, jeho veľkosť, pozíciu vozidla a či sa môže posúvať vertikálne 
+alebo horizontálne. Počiatočný stav môžeme zapísať napríklad
+
+<pre>((cervene 2 3 2 h)(oranzove 2 1 1 h)(zlte 3 2 1 v)(fialove 2 5 1 v)
+(zelene 3 2 4 v)(svetlomodre 3 6 3 h)(sive 2 5 5 h)(tmavomodre 3 1 6 v))</pre>
+
+V tomto zápise je prvé vozidlo červené auto, ktoré sa má dostať ku bráne. 
+Farba vozidla sa môže vynechať, ak ho konkrétna implementácia nevyžaduje. 
+Veľkosť je vždy 2 alebo 3. Súradnice zodpovedajú ľavému hornému rohu 
+automobilu a v tomto príklade sú súradnice počítané od ľavého horného rohu 
+križovatky a začínajú od jednotky, prvá určuje riadok. Smer možného pohybu 
+automobilu určuje <b>h</b> (horizontálny) pre pohyb vľavo a vpravo a <b>v</b> 
+(vertikálny) pre pohyb hore a dole.
+<p>
+<b>Vstupom algoritmov je začiatočný stav.</b> Cieľový stav je definovaný tak, 
+že červené auto je na najpravejšej pozícii v riadku. To vo všeobecnosti 
+definuje celú množinu cieľových stavov a nás nezaujíma, ktorý z nich bude vo 
+výslednom riešení.
+
+</p></dd>
+<dt><h4><font color="BLUE">OPERÁTORY</font></h4></dt>
+<dd>Operátory sú len štyri:
+<pre>(VPRAVO stav vozidlo počet) (VLAVO stav vozidlo počet) (DOLE stav vozidlo počet) a
+(HORE stav vozidlo počet)</pre>
+Operátor dostane nejaký stav, farbu (poradie) vozidla a počet políčok, o ktoré 
+sa má vozidlo posunúť. Ak je možné vozidlo s danou farbou o zadaný počet 
+políčok posunúť, vráti nový stav, kde je príslušné vozidlo na novej pozícii. 
+Ak operátor na vstup nie je možné použiť, výstup nie je definovaný. 
+V konkrétnej implementácii je potrebné výstup buď vhodne dodefinovať alebo 
+zabrániť volaniu nepoužiteľného operátora. <b>Všetky operátory pre tento 
+problém majú rovnakú váhu.</b>
+<p>
+Príklad použitia operátora VPRAVO, pre oranzove auto a posun o 1:
+</p><p>
+Vstupný stav:
+</p><pre>((cervene 2 3 2 h)(oranzove 2 1 1 h)(zlte 3 2 1 v)(fialove 2 5 1 v)
+(zelene 3 2 4 v)(svetlomodre 3 6 3 h)(sive 2 5 5 h)(tmavomodre 3 1 6 v))</pre>
+Výstupný stav:
+<pre>((cervene 2 3 2 h)(oranzove 2 1 2 h)(zlte 3 2 1 v)(fialove 2 5 1 v)
+(zelene 3 2 4 v)(svetlomodre 3 6 3 h)(sive 2 5 5 h)(tmavomodre 3 1 6 v))</pre>
+</dd>
+<dt><h4><font color="BLUE">UZOL</font></h4></dt>
+<dd><a href="http://www2.fiit.stuba.sk/~kapustik/z2d.html#UZOL">Ako v probléme 2</a>
+</dd>
+<dt><h4><font color="BLUE">ALGORITMUS</font></h4></dt>
+<dd><a href="http://www2.fiit.stuba.sk/~kapustik/z2d.html#ALGORITMUS">Ako v probléme 2</a>
+</dd>
+</dl>
+<p>
+</p><hr>
+<h2><font color="#B07070">Definovanie problému 2</font></h2>
+Našou úlohou je nájsť riešenie 8-hlavolamu. Hlavolam je zložený 
+z 8 očíslovaných políčok a jedného prázdneho miesta. Políčka je možné presúvať 
+hore, dole, vľavo alebo vpravo, ale len ak je tým smerom medzera. Je vždy daná 
+nejaká východisková a nejaká cieľová pozícia a je potrebné nájsť postupnosť 
+krokov, ktoré vedú z jednej pozície do druhej.
+<p>
+Príkladom môže byť nasledovná začiatočná a koncová pozícia:
+</p><p>
+<table><tbody><tr><td>
+<b>Začiatok:</b>
+<table border="4" cellpadding="10">
+<tbody><tr>
+<td bgcolor="#CC8888"><big>1</big></td>
+<td bgcolor="#CC8888"><big>2</big></td>
+<td bgcolor="#CC8888"><big>3</big></td>
+</tr><tr>
+<td bgcolor="#CC8888"><big>4</big></td>
+<td bgcolor="#CC8888"><big>5</big></td>
+<td bgcolor="#CC8888"><big>6</big></td>
+</tr><tr>
+<td bgcolor="#CC8888"><big>7</big></td>
+<td bgcolor="#CC8888"><big>8</big></td>
+<td>&nbsp;</td>
+</tr>
+</tbody></table>
+</td><td>&nbsp;</td><td>
+<b>Koniec:</b>
+<table border="4" cellpadding="10">
+<tbody><tr>
+<td bgcolor="#CC8888"><big>1</big></td>
+<td bgcolor="#CC8888"><big>2</big></td>
+<td bgcolor="#CC8888"><big>3</big></td>
+</tr><tr>
+<td bgcolor="#CC8888"><big>4</big></td>
+<td bgcolor="#CC8888"><big>6</big></td>
+<td bgcolor="#CC8888"><big>8</big></td>
+</tr><tr>
+<td bgcolor="#CC8888"><big>7</big></td>
+<td bgcolor="#CC8888"><big>5</big></td>
+<td>&nbsp;</td>
+</tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+</p><p>
+Im zodpovedajúca postupnosť krokov je: <b>VPRAVO, DOLE, VĽAVO, HORE</b>.
+</p><p>
+</p><h3><font color="#B07070">Implementácia 2</font></h3>
+Keď chceme túto úlohu riešiť algoritmami prehľadávania stavového priestoru, 
+musíme si konkretizovať niektoré pojmy:
+<dl>
+<dt><h4><font color="BLUE">STAV</font></h4></dt>
+<dd>Stav predstavuje aktuálne rozloženie políčok. Počiatočný stav môžeme 
+zapísať napríklad
+<pre>((1 2 3)(4 5 6)(7 8 m))</pre>
+alebo
+<pre>(1 2 3 4 5 6 7 8 m)</pre>
+Každý zápis má svoje výhody a nevýhody. Prvý umožňuje (všeobecnejšie) 
+spracovať ľubovoľný hlavolam rozmerov m*n, druhý má jednoduchšiu realizáciu 
+operátorov.
+<p>
+<b>Vstupom algoritmov sú práve dva stavy: začiatočný a cieľový.</b>
+Vstupom programu však môže byť aj ďalšia informácia, napríklad výber heuristiky.
+</p></dd>
+<dt><h4><font color="BLUE">OPERÁTORY</font></h4></dt>
+<dd>Operátory sú len štyri: <pre>VPRAVO, DOLE, VLAVO a HORE</pre>
+Operátor má jednoduchú úlohu – dostane nejaký stav a ak je to možné, vráti 
+nový stav. Ak operátor na vstupný stav nie je možné použiť, výstup nie je 
+definovaný. V konkrétnej implementácii je potrebné výstup buď vhodne 
+dodefinovať, alebo zabrániť volaniu nepoužiteľného operátora. <b>Všetky 
+operátory pre tento problém majú rovnakú váhu.</b>
+<p>
+Príklad použitia operátora DOLE:
+</p><p>
+Vstup:
+</p><pre>((1 2 3)(4 5 6)(7 8 m))</pre>
+Výstup:
+<pre>((1 2 3)(4 5 m)(7 8 6))</pre>
+</dd>
+<dt><h4><font color="BLUE">HEURISTICKÁ FUNKCIA</font></h4></dt>
+<dd>Niektoré z algoritmov potrebujú k svojej činnosti dodatočnú informáciu 
+o riešenom probléme, presnejšie odhad vzdialenosti od cieľového stavu. Pre náš 
+problém ich existuje niekoľko, môžeme použiť napríklad
+<ol>
+<li>Počet políčok, ktoré nie sú na svojom mieste
+</li><li>Súčet vzdialeností jednotlivých políčok od ich cieľovej pozície
+</li><li>Kombinácia predchádzajúcich odhadov
+</li></ol>
+Tieto odhady majú navyše mierne odlišné vlastnosti podľa toho, či medzi 
+políčka počítame alebo nepočítame aj medzeru. Započítavať medzeru však nie 
+je vhodné, lebo taká heuristika nadhodnocuje počet krokov do cieľa.
+<p>
+Príklad:<br>
+Heuristika č. 2, bez medzery, odhaduje vzdialenosť nasledujúcich dvoch stavov na
+<table>
+<tbody><tr>
+<td>
+<table border="4" cellpadding="10">
+<tbody><tr>
+<td bgcolor="#CC8888"><big>1</big></td>
+<td bgcolor="#CC8888"><big>2</big></td>
+<td bgcolor="#CC8888"><big>3</big></td>
+</tr><tr>
+<td bgcolor="#CC8888"><big>4</big></td>
+<td bgcolor="#CC8888"><big>5</big></td>
+<td bgcolor="#CC8888"><big>6</big></td>
+</tr><tr>
+<td bgcolor="#CC8888"><big>7</big></td>
+<td bgcolor="#CC8888"><big>8</big></td>
+<td>&nbsp;</td>
+</tr>
+</tbody></table>
+</td><td>&nbsp;</td><td>
+<table border="4" cellpadding="10">
+<tbody><tr>
+<td bgcolor="#CC8888"><big>7</big></td>
+<td bgcolor="#CC8888"><big>8</big></td>
+<td bgcolor="#CC8888"><big>6</big></td>
+</tr><tr>
+<td bgcolor="#CC8888"><big>5</big></td>
+<td bgcolor="#CC8888"><big>4</big></td>
+<td bgcolor="#CC8888"><big>3</big></td>
+</tr><tr>
+<td bgcolor="#CC8888"><big>2</big></td>
+<td>&nbsp;</td>
+<td bgcolor="#CC8888"><big>1</big></td>
+</tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+</p><pre>4 + 3 + 1 + 1 + 1 + 1 + 2 + 2 = 15</pre>
+</dd>
+<dt><h4><a name="UZOL"><font color="BLUE">UZOL</font></a></h4></dt>
+<dd>Stav predstavuje nejaký bod v stavovom priestore. My však od algoritmov 
+požadujeme, aby nám ukázali cestu. Preto musíme zo stavového priestoru 
+vytvoriť graf, najlepšie priamo strom. Našťastie to nie je zložitá úloha. 
+Stavy jednoducho nahradíme uzlami.<p>
+Čo obsahuje typický uzol?<br>
+Musí minimálne obsahovať
+</p><ul>
+<li><b>STAV</b> (to, čo uzol reprezentuje) a
+</li><li><b>ODKAZ NA PREDCHODCU</b> (pre nás zaujímavá hrana grafu, reprezentovaná 
+čo najefektívnejšie).
+</li></ul>
+<p>
+Okrem toho môže obsahovať ďalšie informácie, ako
+</p><ul>
+<li><b>POSLEDNE POUŽITÝ OPERÁTOR</b>
+</li><li><b>PREDCHÁDZAJÚCE OPERÁTORY</b>
+</li><li><b>HĹBKA UZLA</b>
+</li><li><b>CENA PREJDENEJ CESTY</b>
+</li><li><b>ODHAD CENY CESTY DO CIEĽA</b>
+</li><li>Iné vhodné informácie o uzle
+</li></ul>
+<p>
+Uzol by však nemal obsahovať údaje, ktoré sú nadbytočné a príslušný algoritmus 
+ich nepotrebuje. Pri zložitých úlohách sa generuje veľké množstvo uzlov 
+a každý zbytočný bajt v uzle dokáže spotrebovať množstvo pamäti a znížiť 
+rozsah prehľadávania algoritmu. Nedostatok informácií môže zase extrémne 
+zvýšiť časové nároky algoritmu. <b><i>Použité údaje zdôvodnite</i></b>.
+</p></dd>
+<dt><h4><a name="ALGORITMUS"><font color="BLUE">ALGORITMUS</font></a></h4></dt>
+<dd>Každé zadanie používa svoj algoritmus, ale algoritmy majú mnohé spoločné 
+črty. Každý z nich potrebuje udržiavať informácie o uzloch, ktoré už kompletne 
+spracoval a aj o uzloch, ktoré už vygeneroval, ale zatiaľ sa nedostali na 
+spracovanie. Algoritmy majú tendenciu generovať množstvo stavov, ktoré už boli 
+raz vygenerované. S týmto problémom je tiež potrebné sa vhodne vysporiadať, 
+zvlášť u algoritmov, kde rovnaký stav neznamená rovnako dobrý uzol.
+<p>
+Činnosť nasledujúcich algoritmov sa dá z implementačného hľadiska opísať 
+nasledujúcimi všeobecnými krokmi:
+</p><ol>
+<li>Vytvor počiatočný uzol a umiestni ho medzi vytvorené a zatiaľ nespracované 
+uzly
+</li><li>Ak neexistuje žiadny vytvorený a zatiaľ nespracovaný uzol, skonči 
+s neúspechom – riešenie neexistuje
+</li><li>Vyber najvhodnejší uzol z vytvorených a zatiaľ nespracovaných, označ ho 
+aktuálny
+</li><li>Ak tento uzol predstavuje cieľový stav, skonči s úspechom – vypíš riešenie
+</li><li>Vytvor nasledovníkov aktuálneho uzla a zaraď ho medzi spracované uzly
+</li><li>Vytrieď nasledovníkov a ulož ich medzi vytvorené a zatiaľ nespracované
+</li><li>Choď na krok 2.
+</li></ol>
+Uvedené kroky sú len všeobecné a pre jednotlivé algoritmy ich treba ešte vždy 
+rôzne upravovať a optimalizovať.
+</dd>
+</dl>
+<p>
+<a href="http://www2.fiit.stuba.sk/~kapustik/MN%20hlavolam.html">Niekoľko výsledkov z prehľadávania do šírky v M*N hlavolame.</a>
+
+</p><hr>
+<h2><font color="#A060F0">Definovanie problému 3</font></h2>
+<b>Eulerov kôň</b> <!-- (Euler’s Knight, Knight’s Tour) -->
+<p>
+Úlohou je prejsť šachovnicu legálnymi ťahmi šachového koňa tak, aby každé 
+políčko šachovnice bolo prejdené (navštívené) práve raz. Riešenie treba 
+navrhnúť tak, aby bolo možné problém riešiť pre štvorcové šachovnice rôznych 
+veľkostí (minimálne od veľkosti 5 x 5 do 20 x 20) a aby cestu po šachovnici 
+bolo možné začať na ľubovoľnom východziom políčku.
+</p><p>
+Jedno z mnohých riešení Eulerovho koňa s šachovnicou o rozmeroch 5x5 je napríklad toto:
+</p><p>
+<table cellpadding="3" style="border-collapse: collapse; border: 1pt solid black;">
+<tbody><tr><td class="a">1</td><td class="b">16</td><td class="a">21</td><td class="b">10</td><td class="a">7</td></tr>
+<tr><td class="b">22</td><td class="a">11</td><td class="b">8</td><td class="a">15</td><td class="b">20</td></tr>
+<tr><td class="a">17</td><td class="b">2</td><td class="a">25</td><td class="b">6</td><td class="a">9</td></tr>
+<tr><td class="b">12</td><td class="a">23</td><td class="b">4</td><td class="a">19</td><td class="b">14</td></tr>
+<tr><td class="a">3</td><td class="b">18</td><td class="a">13</td><td class="b">24</td><td class="a">5</td></tr>
+</tbody></table>
+V tomto príklade sa úspešná cesta Eulerovho koňa začala v ľavom hornom rohu 
+(označenom číslom 1) a skončila uprostred šachovnice (na políčku označenom 
+číslom 25), čísla označujú poradové číslo ťahu.
+</p><p>
+Príklad neúspešného riešenia Eulerovho koňa pre šachovnicu 7 x 7 (ale aj 6 x 6 a 5 x 5) je tu:
+<table cellpadding="3" style="border-collapse: collapse; border: 1pt solid black;">
+<tbody><tr><td class="a">&nbsp;</td><td class="b"></td><td class="a"></td><td class="b"></td><td class="a"></td><td class="b"></td><td class="a"></td></tr>
+<tr><td class="b">&nbsp;</td><td class="a"></td><td class="b"></td><td class="a"></td><td class="b"></td><td class="a"></td><td class="b"></td></tr>
+<tr><td class="a">&nbsp;</td><td class="b"></td><td class="a"></td><td class="b"></td><td class="a"></td><td class="b"></td><td class="a"></td></tr>
+<tr><td class="b">&nbsp;</td><td class="a">8</td><td class="b"></td><td class="a"></td><td class="b"></td><td class="a"></td><td class="b"></td></tr>
+<tr><td class="a">&nbsp;</td><td class="b">1</td><td class="a">4</td><td class="b"></td><td class="a"></td><td class="b"></td><td class="a"></td></tr>
+<tr><td class="b">7</td><td class="a"></td><td class="b">9</td><td class="a">2</td><td class="b">5</td><td class="a"></td><td class="b"></td></tr>
+<tr><td class="a">10</td><td class="b">3</td><td class="a">6</td><td class="b"></td><td class="a"></td><td class="b"></td><td class="a"></td></tr>
+</tbody></table>
+Po 10-tich ťahoch sa cesta koňa po šachovnici skončila (neúspechom) v políčku 
+v ľavom dolnom rohu, keďže z tohto miesta už neexistuje žiaden legálny ťah, 
+ktorý by bol pre Eulerovho koňa zároveň aj prípustný, t. j. viedol by na ešte 
+nenavštívené políčko.
+</p><dl>
+<dt><h4><font color="BLUE">STAV, OPERÁTORY, ...</font></h4></dt>
+<dd>Aktuálny stav najlepšie reprezentuje šachovnica. Na začiatku sú všetky 
+jej políčka vynulované a postupne sa zapĺňa číslami, ktoré zodpovedajú 
+príslušnému skoku koňa. Na reprezentáciu uzla je potrebné pridať pre každý 
+skok aj poradové číslo operátora alebo zoznam možných, ešte nevyužitých skokov, 
+aby program pri návrate vedel, akou alternatívou pokračovať, prípadne sa vrátiť 
+ešte o ďalší skok naspäť.<br><br>
+Kôň má vo všeobecnosti 8 možností skoku, ak nie je limitovaný okrajom 
+šachovnice alebo už použitým miestom. To znamená, že existuje 8 operátorov, 
+ktoré je možné označiť napríklad <pre> (1, 2),  (1, -2),  (2, 1),   (2, -1), 
+(-1, 2), (-1, -2), (-2, 1) a (-2, -1),</pre>kde prvé číslo znamená posun od 
+aktuálnej pozície v riadku a druhé v stĺpci.<br><br>
+Algoritmus je jednoducho klasický algoritmus prehľadávania do hĺbky, kde sú 
+všetky štruktúry na ukladanie uzlov nahradené (rozšírenou) šachovnicou.
+</dd></dl>
+<dl>
+<dt><h4><a name="POZN1"><font color="BLUE">POZNÁMKA 1</font></a></h4></dt>
+<dd>Pre problém Eulerovho kôňa treba v oboch úlohách uvažovať s tým, že pre 
+niektoré východzie políčka a niektoré veľkosti šachovnice riešenie neexistuje. 
+Program preto treba navrhnúť a implementovať tak, aby sa v prípade, že do 
+určitého času, resp. počtu krokov riešenie nenájde, zastavil a signalizoval 
+neúspešné hľadanie. Maximálny počet krokov, resp. maximálny čas hľadania by 
+preto mal byť ako jeden zo vstupných (voliteľných) parametrov programu. Pre 
+toto zadanie a testovacie príklady je odporúčaný maximálny počet krokov 
+okolo desať miliónov, resp. maximálny čas 15 až 50 sekúnd.
+</dd></dl>
+<hr>
+<h3>Úlohy:</h3>
+<dl compact="">
+<dt><a name="A"><font size="+2" color="RED">a)</font></a></dt>
+<dd><b style="background: #aea; border: black 1px solid">Problém 1.</b> 
+Použite algoritmus prehľadávania do šírky a do hĺbky.
+Porovnajte ich výsledky.<br>
+</dd>
+<p>
+</p><dt><a name="B"><font size="+2" color="RED">b)</font></a></dt>
+<dd><b style="background: #aea; border: black 1px solid">Problém 1.</b> 
+Použite algoritmus cyklicky sa prehlbujúceho hľadania.<br>
+</dd>
+<p>
+</p><dt><a name="C"><font size="+2" color="RED">c)</font></a></dt>
+<dd><b style="background: #eaa; border: black 1px solid">Problém 2.</b> 
+Použite algoritmus obojsmerného hľadania.<br>
+</dd>
+<p>
+</p><dt><a name="D"><font size="+2" color="RED">d)</font></a></dt>
+<dd><b style="background: #eaa; border: black 1px solid">Problém 2.</b> 
+Použite algoritmus lačného hľadania, porovnajte výsledky heuristík 1. a 2.<br>
+</dd>
+<p>
+</p><dt><a name="E"><font size="+2" color="RED">e)</font></a></dt>
+<dd><b style="background: #eaa; border: black 1px solid">Problém 2.</b> 
+Použite A<sup>*</sup> algoritmus, porovnajte výsledky heuristík 1. a 2.<br>
+</dd>
+<p>
+</p><dt><a name="F"><font size="+2" color="RED">f)</font></a></dt>
+<dd><b style="background: #a8f; border: black 1px solid">Problém 3.</b> 
+Algoritmom slepého prehľadávania (do hĺbky) je možné nájsť (všetky) riešenia 
+(v bežných výpočtových – čas a pamäť – podmienkach PC) iba pri šachovniciach 
+do veľkosti 6x6, max 7x7. Implementujte tento algoritmus pre šachovnice 
+s rozmermi 5x5 a 6x6 a skúste nájsť prvých 5 riešení pre každú šachovnicu tak, 
+že pre šachovnicu 5x5 aj 6x6 si vyberte náhodne 5 východzích bodov (spolu teda 
+10 východzích bodov) s tým, že jeden z týchto bodov je (pre každú šachovnicu) 
+ľavý dolný roh a pre každý z týchto bodov nájdite (skúste nájsť) prvé 
+riešenie. V prípade, že ho v stanovenom limite nenájdete, signalizujte 
+neúspešné hľadanie. V diskusii potom analyzujte pozorované výsledky.<br>
+</dd>
+<p>
+</p><dt><a name="G"><font size="+2" color="RED">g)</font></a></dt>
+<dd><b style="background: #a8f; border: black 1px solid">Problém 3.</b> Pre 
+riešenie problému Eulerovho koňa existuje veľmi dobrá a pritom jednoduchá 
+heuristika, skúste na ňu prísť sami. Ak sa vám to do týždňa nepodarí, 
+pohľadajte na dostupných informačných zdrojoch heuristiku (z roku 1823!), 
+prípadne konzultujte na najbližšom cvičení cvičiaceho. Implementujte túto 
+heuristiku do algoritmu prehľadávania stromu do hĺbky a pre šachovnicu 8x8 
+nájdite pre 10 rôznych východzích bodov jedno (prvé) správne riešenie (pre 
+každý východzí bod). Algoritmus s heuristikou treba navrhnúť a implementovať 
+tak, aby bol spustiteľný aj pre šachovnice iných rozmerov než 8x8. Treba 
+pritom zohľadniť upozornenie v <a href="http://www2.fiit.stuba.sk/~kapustik/z2d.html#POZN1">Poznámke 1</a>. Je preto 
+odporúčané otestovať implementovaný algoritmus aj na šachovnici rozmerov 7x7, 
+9x9, prípadne 20x20 (máme úspešne odskúšaný aj rozmer 255x255) a prípadné 
+zistené rozdiely v úspešnosti heuristiky analyzovať a diskutovať.<br>
+</dd>
+<p>
+</p><dt><a name="S"><font size="+2" color="RED">s)</font></a></dt>
+<dd><b style="background: #acf; border: black 1px solid">Voliteľný 
+problém.</b> Namiesto ktoréhokoľvek z predchádzajúcich zadaní je možné riešiť 
+problém <a href="http://www2.fiit.stuba.sk/~kapustik/sokoban.html">Sokoban</a>. Je náročnejší na implementáciu 
+a riešiť je ho možné po schválení cvičiacim.<br>
+</dd>
+</dl>
+<hr>
+<h3>Odporúčaná literatúra:</h3>
+Návrat a kol.: Umelá Inteligencia, STU Bratislava.
+<p>
+</p><hr>
+</td></tr></tbody></table>
+
+</body></html>

@@ -1,0 +1,120 @@
+
+<!-- saved from url=(0044)http://www2.fiit.stuba.sk/~kapustik/zen.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
+
+<link rel="SHORTCUT ICON" href="http://www2.fiit.stuba.sk/~kapustik/UI3.ico">
+<title>Evolucny algoritmus - zen</title>
+<style type="text/css">
+<!--
+h2,h3 {margin-left: 0.5cm;}
+img   {margin-left: 1cm;}
+td td {text-align: center;
+       width: 25px;}
+-->
+</style>
+</head>
+<body bgcolor="#f0f4ff">
+<table style=" max-width: 624pt; min-width: 280pt; margin: auto; background-color: white;" border="0"><tbody><tr><td>
+
+<h2>Zenová záhrada</h2>
+<h2>Zadanie č. 2a
+<hr align="LEFT" width="140"></h2>
+
+<h3>Úloha</h3>
+Zenová záhradka je plocha vysypaná hrubším pieskom (drobnými kamienkami). 
+Obsahuje však aj nepohyblivé väčšie objekty, ako napríklad kamene, sochy, 
+konštrukcie, samorasty. Mních má upraviť piesok v záhradke pomocou hrablí 
+tak, že vzniknú pásy ako na nasledujúcom obrázku.
+<br>
+<img src="./Evolucny algoritmus - zen_files/zen-s.png">
+<br>
+Pásy môžu ísť len vodorovne alebo zvislo, nikdy nie šikmo. Začína vždy na 
+okraji záhradky a ťahá rovný pás až po druhý okraj alebo po prekážku. Na 
+okraji – mimo záhradky môže chodiť ako chce. Ak však príde k prekážke – kameňu 
+alebo už pohrabanému piesku – musí sa otočiť, ak má kam. Ak má voľné smery 
+vľavo aj vpravo, je jeho vec, kam sa otočí. Ak má voľný len jeden smer, otočí 
+sa tam. Ak sa nemá kam otočiť, je koniec hry. Úspešná hra je taká, v ktorej 
+mních dokáže za daných pravidiel pohrabať celú záhradu, prípade maximálny 
+možný počet políčok. Výstupom je pokrytie danej záhrady prechodmi mnícha. 
+Pokrytie zodpovedajúce presne prvému obrázku (priebežný stav) je napríklad takéto:
+<br>
+<table cellspacing="1" cellpadding="4" style="border-collapse: collapse; border: .5pt solid black;background: #e0ddbb;margin-left: 1cm;">
+<tbody><tr><td>0</td><td>0</td><td style="color: #f00">1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td style="color: #008">10</td><td style="color: #008">10</td><td style="color: #065">8</td><td style="color: #06f">9</td></tr>
+
+<tr><td>0</td><td>0</td><td style="color: #f00">1</td><td>0</td><td>0</td><td style="background: #aaa">K</td><td>0</td><td>0</td><td style="color: #008">10</td><td style="color: #008">10</td><td style="color: #065">8</td><td style="color: #06f">9</td></tr>
+
+<tr><td>0</td><td style="background: #aaa">K</td><td style="color: red">1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td style="color: #008">10</td><td style="color: #008">10</td><td style="color: #065">8</td><td style="color: #06f">9</td></tr>
+
+<tr><td>0</td><td>0</td><td style="color: #f00">1</td><td style="color: #f00">1</td><td style="background: #aaa">K</td><td>0</td><td>0</td><td>0</td><td style="color: #008">10</td><td style="color: #008">10</td><td style="color: #065">8</td><td style="color: #06f">9</td></tr>
+
+<tr><td>0</td><td>0</td><td style="background: #aaa">K</td><td style="color: #f00">1</td><td>0</td><td>0</td><td>0</td><td>0</td><td style="color: #008">10</td><td style="color: #008">10</td><td style="color: #065">8</td><td style="color: #06f">9</td></tr>
+
+<tr><td style="color: #d00">2</td><td style="color: #d00">2</td><td style="color: #d00">2</td><td style="color: #f00">1</td><td>0</td><td>0</td><td>0</td><td>0</td><td style="color: #008">10</td><td style="color: #008">10</td><td style="color: #065">8</td><td style="color: #06f">9</td></tr>
+
+<tr><td style="color: #a00">3</td><td style="color: #a00">3</td><td style="color: #d00">2</td><td style="color: #f00">1</td><td>0</td><td>0</td><td>0</td><td>0</td><td style="background: #aaa">K</td><td style="background: #aaa">K</td><td style="color: #065">8</td><td style="color: #065">8</td></tr>
+
+<tr><td style="color: #700">4</td><td style="color: #a00">3</td><td style="color: #d00">2</td><td style="color: #f00">1</td><td>0</td><td>0</td><td>0</td><td>0</td><td style="color: #0e0">5</td><td style="color: #0e0">5</td><td style="color: #0e0">5</td><td style="color: #0e0">5</td></tr>
+
+<tr><td style="color: #700">4</td><td style="color: #a00">3</td><td style="color: #d00">2</td><td style="color: #f00">1</td><td>0</td><td>0</td><td>0</td><td style="color: #70a">11</td><td style="color: #0e0">5</td><td style="color: #0c0">6</td><td style="color: #0c0">6</td><td style="color: #0c0">6</td></tr>
+
+<tr><td style="color: #700">4</td><td style="color: #a00">3</td><td style="color: #d00">2</td><td style="color: #f00">1</td><td>0</td><td>0</td><td>0</td><td style="color: #70a">11</td><td style="color: #0e0">5</td><td style="color: #0c0">6</td><td style="color: #090">7</td><td style="color: #090">7</td></tr>
+</tbody></table>
+<br>
+Úlohu je možné rozšíriť tak, že mních navyše zbiera popadané lístie. Listy 
+musí zbierať v poradí: najprv žlté, potom pomarančové a nakoniec červené. 
+Príklad vidno na obrázku nižšie. Listy, ktoré zatiaľ nemôže zbierať, 
+predstavujú pevnú prekážku. Fitness funkcia ostáva rovnaká. 
+<!-- Za takto rozšírenú úlohu je možné získať navyše jeden bonusový bod. -->
+<br>
+<img src="./Evolucny algoritmus - zen_files/zen-l.png">
+
+<h3>Zadanie</h3>
+Uvedenú úlohu riešte pomocou evolučného algoritmu. (Je možné použiť aj ďalšie 
+algoritmy, ako sú uvedené v probléme obchodného cestujúceho.) Maximálny počet génov 
+nesmie presiahnuť polovicu obvodu záhrady plus počet kameňov, v našom príklade 
+podľa prvého obrázku 12+10+6=28. Fitnes je určená počtom pohrabaných políčok. 
+Výstupom je matica, znázorňujúca cesty mnícha. Je potrebné, aby program 
+zvládal aspoň záhradku podľa prvého obrázku, ale vstupom môže byť v princípe 
+ľubovoľná mapa.
+
+<h3>Náčrt algoritmu</h3>
+Jedná sa o klasický genetický algoritmus, takže na začiatku, po načítaní 
+rozmerov záhrady a pozícií kameňov, sa vytvorí prvá 
+generácia jedincov s náhodne nastavenými génmi. Potom sa všetky jedince 
+ohodnotia, teda pre každého jedinca sa vytvorí matica s prechodmi mnícha 
+a zistí sa, koľko políčok sa podarilo pokryť. Na základe ohodnotenia sa vyberú 
+jedince na tvorbu novej generácie – kríženie a takto vytvorení jedinci môžu 
+s určitou pravdepodobnosťou aj mutovať. Vytvorí sa tak nová generácia a to 
+sa vykonáva dokola, až kým sa nepodarí pokryť všetky políčka alebo sa dosiahne 
+stanovený počet nových generácií.
+<br>
+Pre gény je najvhodnejšie, keď reprezentujú priamo miesto na obvode záhrady, 
+kde mních vstúpi (ak môže) a začne hrabať. Zvyšné gény môžu reprezentovať 
+rozhodnutia mnícha, či sa pri najbližšej možnosti voľby dá vpravo alebo vľavo.
+<br>
+Vstupom sú rozmery záhrady a súradnice kameňov, výstupom je mapa pohrabanej 
+záhrady, podobne ako na druhom obrázku. (Kamene môžu byť napríklad –1.)
+<p>
+Použite aspoň dve rôzne metódy výberu jedincov.
+</p><p>
+Tu je <a href="http://www2.fiit.stuba.sk/~kapustik/Turnaj100.png">ukážka</a>, ako sa mení pravdepodobnosť výberu 
+zvoleného jedinca od počtu jedincov v turnaji. Pri dvoch jedincoch je 
+závislosť lineárna (tak ako pri selekcii ohodnotením). Viac ako troch 
+jedincov v turnaji zvyčajne nepoužívame, lebo je príliš malá šanca, že sa 
+vyberie nejaký jedinec zo slabšej polovice generácie.
+</p>
+
+<h3>Dokumentácia</h3>
+Dokumentácia musí obsahovať konkrétne použitý algoritmus (nie len náčrt 
+algoritmu, ako v zadaní), podrobný opis vlastností použitých génov, opis ako 
+sa pohybuje a rozhoduje mních, spôsob tvorby novej generácie a možnosti 
+nastavenia parametrov. Dôležitou časťou dokumentácie je zhodnotenie vlastností 
+vytvoreného systému a porovnanie dosahovaných výsledkov pre viacero nastavení 
+parametrov. Vývoj fitnes je vhodné zobraziť grafom (stredná hodnota, 
+maximálna). Dokumentácia by mala tiež obsahovať opis vylepšovania, dolaďovania 
+riešenia.
+
+<hr>
+</td></tr></tbody></table>
+
+</body></html>
