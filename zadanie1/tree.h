@@ -1,34 +1,24 @@
 #ifndef UI_ZADANIE1_TREE_H
 #define UI_ZADANIE1_TREE_H
 
+#pragma once
 
 #include <iostream>
 #include <string>
-#include <algorithm>
 #include <vector>
 #include <unordered_map>
-#include <chrono>
 
 #define N 9
 #define MANHATTAN "manhattan"
 #define MISPLACED "misplaced"
 
-using namespace std::chrono;
 
-using std::cin;
-using std::cout;
-using std::endl;
-using std::string;
-
-
-
-enum direction{
+enum class direction{
+    NONE = 0,
     UP,
     DOWN,
     LEFT,
-    RIGHT,
-    ERROR,
-    NONE
+    RIGHT
 };
 
 class Node{
@@ -43,7 +33,7 @@ public:
     Node *right;
     Node *prev;
 
-    Node(int state[], int depth)
+    Node(const int state[], int depth)
     {
         for(int i=0;i<N;i++)
         {
@@ -55,7 +45,7 @@ public:
         this->right = nullptr;
         this->prev = nullptr;
 
-        this->dir = NONE;
+        this->dir = direction::NONE;
         this->depth = depth;
     }
     ~Node()
@@ -70,13 +60,25 @@ public:
         left = nullptr;
         right = nullptr;
     }
+
+    static void printNode(const Node *node)
+    {
+        if(node == nullptr)
+        {
+            return;
+        }
+        std::cout << node->state[0] << " " << node->state[1] << " " << node->state[2] << "\n";
+        std::cout << node->state[3] << " " << node->state[4] << " " << node->state[5] << "\n";
+        std::cout << node->state[6] << " " << node->state[7] << " " << node->state[8] << "\n";
+        std::cout << "\n";
+    }
 };
 
 class Tree{
 public:
     Node *root;
     std::vector<Node*> created;
-    std::unordered_map<string, Node*> processed;
+    std::unordered_map<std::string, Node*> processed;
 
     Tree()
     {
@@ -90,49 +92,71 @@ public:
             delete root;
             root = nullptr;
         }
-
     }
 
-    void printNode(Node *node)
+    static void printTree(Node *node)
     {
-        if(node == nullptr)
-        {
-            return;
+        std::cout << "Tree nodes (in reversed order / from end to start):\n!! END !!\n\n";
+        std::cout << "  ^\n";
+        std::cout << "  |\n\n";
+        Node *current = node;
+        while(current->prev != nullptr) {
+            Node::printNode(current);
+            std::cout << "  ^" << "\t" << dirToString(current->dir) << "\n";
+            std::cout << "  |\n\n";
+            current = current->prev;
         }
-        cout << node->state[0] << " " << node->state[1] << " " << node->state[2] << endl;
-        cout << node->state[3] << " " << node->state[4] << " " << node->state[5] << endl;
-        cout << node->state[6] << " " << node->state[7] << " " << node->state[8] << endl;
-        cout << endl;
+        Node::printNode(current);
+        std::cout << "  ^\n";
+        std::cout << "  |\n\n";
+        std::cout << "!! START !!\n\n";
+    }
+
+    static std::string dirToString(direction dir)
+    {
+        switch(dir)
+        {
+            case direction::UP:
+                return "UP";
+            case direction::DOWN:
+                return "DOWN";
+            case direction::LEFT:
+                return "LEFT";
+            case direction::RIGHT:
+                return "RIGHT";
+            default:
+                return "NONE";
+        }
     }
 
     void generateStates(Node *node)
     {
         std::vector<direction> states = possibleStates(node);
 
-        if(states[0] == ERROR)
+        if(states[0] == direction::NONE)
         {
             return;
         }
 
-        for(int i=0;i<states.size();i++)
+        for(auto & state : states)
         {
             int new_state[N];
             for(int j=0;j<N;j++)
             {
                 new_state[j] = node->state[j];
             }
-            switch (states[i])
+            switch (state)
             {
-                case UP:
+                case direction::UP:
                     swap(new_state, getIndex(new_state, 0), getIndex(new_state, 0) - 3);
                     break;
-                case DOWN:
+                case direction::DOWN:
                     swap(new_state, getIndex(new_state, 0), getIndex(new_state, 0) + 3);
                     break;
-                case LEFT:
+                case direction::LEFT:
                     swap(new_state, getIndex(new_state, 0), getIndex(new_state, 0) - 1);
                     break;
-                case RIGHT:
+                case direction::RIGHT:
                     swap(new_state, getIndex(new_state, 0), getIndex(new_state, 0) + 1);
                     break;
                 default:
@@ -144,20 +168,20 @@ public:
             {
                 Node *new_node = new Node(new_state, node->depth + 1);
                 new_node->prev = node;
-                new_node->dir = states[i];
+                new_node->dir = state;
 
-                switch (states[i])
+                switch (state)
                 {
-                    case UP:
+                    case direction::UP:
                         node->up = new_node;
                         break;
-                    case DOWN:
+                    case direction::DOWN:
                         node->down = new_node;
                         break;
-                    case LEFT:
+                    case direction::LEFT:
                         node->left = new_node;
                         break;
-                    case RIGHT:
+                    case direction::RIGHT:
                         node->right = new_node;
                         break;
                     default:
@@ -177,40 +201,40 @@ public:
         state[index2] = temp;
     }
 
-    std::vector<direction> possibleStates(Node *node)
+    static std::vector<direction> possibleStates(const Node *node)
     {
         int zero_index;
         if((zero_index = getIndex(node->state, 0)) == -1)
         {
-            return {ERROR};
+            return {direction::NONE};
         }
 
         switch (zero_index)
         {
             case 0:
-                return {RIGHT, DOWN};
+                return {direction::RIGHT, direction::DOWN};
             case 1:
-                return {LEFT, RIGHT, DOWN};
+                return {direction::LEFT, direction::RIGHT, direction::DOWN};
             case 2:
-                return {LEFT, DOWN};
+                return {direction::LEFT, direction::DOWN};
             case 3:
-                return {UP, RIGHT, DOWN};
+                return {direction::UP, direction::RIGHT, direction::DOWN};
             case 4:
-                return {UP, LEFT, RIGHT, DOWN};
+                return {direction::UP, direction::LEFT, direction::RIGHT, direction::DOWN};
             case 5:
-                return {UP, LEFT, DOWN};
+                return {direction::UP, direction::LEFT, direction::DOWN};
             case 6:
-                return {UP, RIGHT};
+                return {direction::UP, direction::RIGHT};
             case 7:
-                return {UP, LEFT, RIGHT};
+                return {direction::UP, direction::LEFT, direction::RIGHT};
             case 8:
-                return {UP, LEFT};
+                return {direction::UP, direction::LEFT};
             default:
-                return {ERROR};
+                return {direction::NONE};
         }
     }
 
-    static bool checkFinal(Node *node, const int goal[])
+    static bool checkFinal(const Node *node, const int goal[])
     {
         for(int i=0;i<N;i++)
         {
@@ -235,7 +259,7 @@ public:
     }
 
 
-    static bool solvable(int state[], int goal[])
+    static bool solvable(const int state[], const int goal[])
     {
         int sum_goal = 0;
 
@@ -288,32 +312,27 @@ public:
         return sum;
     }
 
-    static int applyHeuristic(const int state[], const int goal[], string heuristic) {
+    static int applyHeuristic(const int state[], const int goal[], const std::string& heuristic) {
         if (heuristic == MANHATTAN)
         {
             return manhattanDistance(state, goal);
         }
-        else if (heuristic == MISPLACED)
+        if (heuristic == MISPLACED)
         {
             return misplacedSquares(state, goal);
         }
-        else
-        {
-            return -1;
-        }
+
+        return -1;
     }
 
-
-    static string getStrRepresentation(int arr[])
+    static std::string getStrRepresentation(int arr[])
     {
-        string str;
+        std::string str;
         for(int i=0;i<N;i++)
         {
             str += std::to_string(arr[i]);
         }
         return str;
     }
-
-
 };
 #endif //UI_ZADANIE1_TREE_H

@@ -1,17 +1,25 @@
 #include <iostream>
+#include <string>
+#include <chrono>
 #include "tree.h"
 
-//init state examples
+#define N 9
+#define MANHATTAN "manhattan"
+#define MISPLACED "misplaced"
+#define MANUAL 0
+#define DEBUG_PRINT 0
 
-//  1  {6, 2, 0, 1, 5, 3, 4, 7, 8};
-//  2  {1, 2, 3, 4, 6, 8, 7, 5, 0};
-//  3  {7, 3, 5, 2, 4, 1, 8, 6, 0};
-//  4  {2, 3, 8, 7, 1, 5, 0, 4, 6};
-//  5  {2, 4, 3, 1, 6, 8, 0, 7, 5};
-//  6  {4, 1, 6, 7, 3, 2, 0, 5, 8};
-//  7  {1, 2, 3, 7, 4, 8, 0, 6, 5};
-//  8  {1, 3, 0, 4, 2, 8, 7, 6, 5};
-//  9  {1, 2, 3, 8, 0, 5, 4, 7, 6};
+// init state examples
+
+//  1   {6, 2, 0, 1, 5, 3, 4, 7, 8};
+//  2   {1, 2, 3, 4, 6, 8, 7, 5, 0};
+//  3   {7, 3, 5, 2, 4, 1, 8, 6, 0};
+//  4   {2, 3, 8, 7, 1, 5, 0, 4, 6};
+//  5   {2, 4, 3, 1, 6, 8, 0, 7, 5};
+//  6   {4, 1, 6, 7, 3, 2, 0, 5, 8};
+//  7   {1, 2, 3, 7, 4, 8, 0, 6, 5};
+//  8   {1, 3, 0, 4, 2, 8, 7, 6, 5};
+//  9   {1, 2, 3, 8, 0, 5, 4, 7, 6};
 //  10  {4, 2, 3, 7, 1, 8, 5, 6, 0};
 
 //  11  {1, 3, 5, 4, 8, 2, 7, 6, 0};
@@ -25,151 +33,122 @@
 //  19  {2, 3, 5, 7, 1, 4, 0, 8, 6};
 //  20  {3, 6, 8, 1, 0, 2, 5, 4, 7};
 
-//goal state
+// goal state example
 
-//    {1, 2, 3, 4, 5, 6, 7, 8, 0};
+//      {1, 2, 3, 4, 5, 6, 7, 8, 0};
 
 
-// v mojej implementácii posúvame operátormi medzeru, teda 0
+// in my implemenation the blank space is represented by number 0
+// in my implementation, i move the blank space instead of the given number with the operators
 
-void compute(string heuristic_pass)
-{
+void compute(const std::string &heuristic_pass) {
 
-//          manual input
-
+# if MANUAL
     int state[N]{};
     int goal[N]{};
 
-    cout << "Matrix 3x3: " << endl;
-    cout << "Number '0' represents the blank space" << endl;
-    cout << "Example: " << endl;
-    cout << "1 2 3" << endl;
-    cout << "4 5 6" << endl;
-    cout << "7 8 0" << endl;
-    cout << "Enter the initial state of the puzzle:" << endl;
-    // reading matrix input
-    for(int i=0;i<N;i++)
+    std::cout << "\nMatrix 3x3:\n";
+    std::cout << "Number '0' represents the blank space\n";
+    std::cout << "Example:\n";
+    std::cout << "1 2 3\n";
+    std::cout << "4 5 6\n";
+    std::cout << "7 8 0\n";
+    std::cout << "\nEnter the initial state of the puzzle:\n";
+    for(int & i : state)
     {
-        cin >> state[i];
+        std::cin >> i;
     }
 
-    cout << "Enter the goal state of the puzzle:" << endl;
-    for(int i=0;i<N;i++)
+    std::cout << "Enter the goal state of the puzzle:\n";
+    for(int & i : goal)
     {
-        cin >> goal[i];
+        std::cin >> i;
     }
-//     -----------------------------
 
-//          faster testing input
+    std::cout << "\n";
+#else
 
-//    int state[N] = {3, 6, 8, 1, 0, 2, 5, 4, 7};
-//    int goal[N] = {1,2,3,4,5,6,7,8,0};
+    const int state[N] = {3, 4, 6, 1, 0, 2, 7, 5, 8};
+    const int goal[N] = {1,2,3,4,5,6,7,8,0};
 
-// -----------------------------
+#endif
 
-
-    Tree *tree = new Tree();
-    tree->root = new Node(state, 0);
-    Node *current = tree->root;
+    Tree tree;
+    tree.root = new Node(state, 0);
+    Node *current = tree.root;
     Node *final = nullptr;
-    int steps = 0;
-    string current_dir = "";
-    string final_path = "";
-    
-    
+    std::string final_path;
+
+
     if(Tree::checkFinal(current, goal))
     {
-        cout << "The puzzle is already solved" << endl;
-
-        delete tree;
+        std::cout << "The puzzle is already solved\n";
         return;
     }
 
     if(!(Tree::solvable(state, goal)))
     {
-        cout << "The puzzle is not solvable" << endl;
-
-        delete tree;
+        std::cout << "The puzzle is not solvable\n";
         return;
     }
 
-    tree->created.push_back(tree->root);
+    tree.created.push_back(tree.root);
 
     while(true)
     {
-        int temp_heuristic=Tree::applyHeuristic(tree->created[0]->state, goal, heuristic_pass);
+        int temp_heuristic=Tree::applyHeuristic(tree.created[0]->state, goal, heuristic_pass);
         int temp_index=0;
-        
-        for(int i=0; i< tree->created.size(); i++)
+
+        for(int i=0; i< tree.created.size(); i++)
         {
-            if(Tree::applyHeuristic(tree->created[i]->state, goal, heuristic_pass) < temp_heuristic)
+            int inHeuristic = Tree::applyHeuristic(tree.created[i]->state, goal, heuristic_pass);
+            if(inHeuristic < temp_heuristic)
             {
-                temp_heuristic = Tree::applyHeuristic(tree->created[i]->state, goal, heuristic_pass);
+                temp_heuristic = inHeuristic;
                 temp_index = i;
             }
         }
-        
-        current = tree->created[temp_index];
-        
+
+        current = tree.created[temp_index];
+
         if(Tree::checkFinal(current, goal))
         {
             final = current;
             break;
         }
 
-        tree->generateStates(current);
-        tree->created.erase(tree->created.begin() + temp_index, tree->created.begin() + temp_index + 1);
-        // tree->printNode(current);
+        tree.generateStates(current);
+
+        // remove the node (one element from created vector) at the temp_index
+        tree.created.erase(tree.created.begin() + temp_index, tree.created.begin() + temp_index + 1);
     }
+    std::cout << "\n\n";
 
-    cout << endl << endl;
 
-    cout << "Initial: "<<endl;
-    tree->printNode(tree->root);
-    cout<< "Final: "<<endl;
-    tree->printNode(final);
 
-    steps = final->depth;
-    //backtracking of the taken steps
 
-    while(final->prev != nullptr)
+    int steps = final->depth;
+    Node *temp = final;
+    // backtracking of the taken steps
+    while(temp->prev != nullptr)
     {
-        switch(final->dir)
-        {
-            case UP:
-                current_dir = "UP";
-                break;
-            case DOWN:
-                current_dir = "DOWN";
-                break;
-            case LEFT:
-                current_dir = "LEFT";
-                break;
-            case RIGHT:
-                current_dir = "RIGHT";
-                break;
-            case ERROR:
-                current_dir = "ERROR";
-                break;
-            default:
-                current_dir = "NONE";
-                break;
-        }
-        final_path = final_path + current_dir + " <- ";
-        final = final->prev;
+        final_path += Tree::dirToString(temp->dir) + " <- ";
+        temp = temp->prev;
     }
 
-    final_path = final_path + "!! START !!";
+    final_path += "!! START !!";
 
-    cout << "Steps: " << steps << endl;
-    cout << "Path: " << final_path << endl;
-
-
-    delete tree;
-
+    Tree::printTree(final);
+    std::cout << "Steps: " << steps << "\n";
+    std::cout << "Path: " << final_path << "\n\n";
+    std::cout << "Initial:\n";
+    Node::printNode(tree.root);
+    std::cout<< "Final:\n";
+    Node::printNode(final);
+    std::cout << "--------------------------------------\n";
 }
 
-auto timeMeasure(string heuristic_pass)
+auto timeMeasure(const std::string &heuristic_pass)
 {
     auto start = std::chrono::high_resolution_clock::now();
     compute(heuristic_pass);
@@ -180,18 +159,25 @@ auto timeMeasure(string heuristic_pass)
 
 int main() {
 
-    cout << "Misplaced heuristic: " << endl;
-    compute(MISPLACED);
-    cout << endl << endl;
-    cout << "Manhattan heuristic: " << endl;
-    compute(MANHATTAN);
-    cout << endl << endl;
+    // TODO implement a way to count the number of explored nodes
+    // TODO learn the logic behind created and processsed vecotr and hash map respectively
+    // static unsigned int exploredNodeCount = 0;
 
-//    auto duration_miss = timeMeasure(MISPLACED);
-//    auto duration_manh = timeMeasure(MANHATTAN);
-//
-//    cout << "Time for Misplaced: " << duration_miss << " microseconds" << endl;
-//    cout << "Time for Manhattan: " << duration_manh << " microseconds" << endl;
+#if MANUAL
+    std::cout << "\n\n--------------Misplaced heuristic--------------\n";
+    compute(MISPLACED);
+    std::cout << "\n\n";
+    std::cout << "\n\n--------------Manhattan heuristic--------------\n";
+    compute(MANHATTAN);
+    std::cout << "\n\n";
+#else
+
+    auto duration_miss = timeMeasure(MISPLACED);
+    auto duration_manh = timeMeasure(MANHATTAN);
+
+    std::cout << "Time for Misplaced: " << duration_miss << " microseconds\n";
+    std::cout << "Time for Manhattan: " << duration_manh << " microseconds\n";
+#endif
 
     return 0;
 }
