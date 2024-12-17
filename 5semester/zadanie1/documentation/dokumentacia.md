@@ -489,7 +489,7 @@ Moja implementácia vie spoľahlivo nájsť riešenie. Väčšinou to je do pár
 |46                  |86   |105 |97       |
 |47                  |93   |114 |100      |
 
-![Histogram](./histogram.png)
+![Histogram](./resources/histogram.png)
 
 Z grafu je vidieť že na začiatku sa nám fitness postupne zväčšuje až kým nenájdeme riešenie. V tomto prípade to bolo v 48 generácii. Vidíme tam aj nejaké skoky, ktoré sú spôsobené mutáciami. Tieto mutácie však môžu byť aj príčinou prečo sa nám podarilo nájsť riešenie.
 
