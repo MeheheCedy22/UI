@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1250">
+<LINK REL="SHORTCUT ICON" HREF="UI3.ico">
+<TITLE>Umelé neurónové siete</TITLE>
+<style type="text/css">
+<!--
+h3 {margin-left: 0.5cm;}
+p     {text-indent: 0.5cm;}
+-->
+</style>
+</HEAD>
+<BODY BGCOLOR="#f0f4ff">
+<TABLE style=" max-width: 624pt; min-width: 280pt; margin: auto; background-color: white;" border="0"><TR><TD>
+
+<center>
+<h2>Zadanie 3b</h2>
+<p style="font-size:130%;">Podúloha: California Housing regresný model</p>
+</center>
+
+<h3>Úloha:</h3>
+<p>
+Vyviniete neurónovú sieť na vykonanie regresie na súbore údajov o&nbsp;bývaní 
+v&nbsp;Kalifornii. Cieľom je predpovedať strednú hodnotu ceny domu pre okresy 
+Kalifornie na základe niekoľkých údajov, ako sú údaje o&nbsp;obyvateľstve, príjme 
+a&nbsp;polohe. Dátová množina obsahuje 20&nbsp;640 prípadov s&nbsp;8 údajmi, ako napríklad stredný 
+príjem, vek nehnuteľnosti a&nbsp;priemerná obsadenosť a&nbsp;tiež cieľovú hodnotu, ktorou 
+je stredná hodnota ceny domu. Táto úloha vám pomôže pochopiť, ako aplikovať 
+neurónové siete na regresné problémy, kde výstupom je spojitá hodnota.
+</p>
+<h3>Zadanie:</h3>
+<p>
+Na riešenie úlohy použite doprednú neurónovú sieť (viacvrstvový perceptrón), 
+kde vyskúšate viacero modelov a&nbsp;môžete sa snažiť nájsť ten najmenší, ale 
+stále úspešný. Natrénujte ju pomocou algoritmov SGD, SGD s&nbsp;momentom 
+a&nbsp;ADAM. Odmerajte trénovaciu a&nbsp;testovaciu chybu. V úlohe určite použite 
+knižnicu <b>PyTorch</b> (stačí verzia pre CPU), iné knižnice podľa svojho uváženia.
+</p>
+<h3>Náčrt modelu:</h3>
+<ol>
+  <li>Stiahnite si <a href="https://github.com/sonarsushant/California-House-Price-Prediction/blob/master/housing.csv">dátovú množinu</a> 
+    alebo použite knižnicu <b>scikit-learn</b> a&nbsp;v&nbsp;nej je dataset možné priamo 
+	stiahnuť. Je dobré napísať potom k&nbsp;tomu triedu zdedenú z 
+	<code>torch.utils.data.Dataset</code>.</li>
+  <li>Rozdeľte dátovú množinu na trénovaciu a&nbsp;testovaciu (napr. 80% tréning, 
+    20% testovanie).</li>
+  <li>Predspracujte vhodne dáta: normalizujte jednotlivé údaje. Zvážte 
+    škálovanie cieľových hodnôt na zlepšenie stability tréningu.</li>
+  <li>Navrhnite hyperparametre modelu – počet vrstiev a&nbsp;ich veľkosti, 
+    zvoľte si vhodné aktivačné funkcie, nastavte rýchlosť učenia 
+	a&nbsp;veľkosť dávky (batch) pre optimalizačný algoritmus.</li>
+  <li>Postupne vyskúšajte všetky tri optimalizačné algoritmy spomenuté 
+    v&nbsp;zadaní. Trénujte model vždy rovnaký počet epoch, aby ich bolo možné 
+	porovnať.</li>
+</ol>
+<h3>Dokumentácia:</h3>
+<p>
+Dokumentácia má obsahovať popis architektúry a&nbsp;tabuľku hyperparametrov 
+(experiment popíšte tak, aby ho bolo na základe textu možné zopakovať), grafy 
+z&nbsp;priebehu tréningu (trénovacia a&nbsp;testovacia chyba). Na záver napíšte stručné 
+zhodnotenie, ako úspešné boli optimalizačné algoritmy a&nbsp;architektúry, ktoré 
+ste vyskúšali.
+</p>
+
+
+
+<hr>
+<center>
+<p style="font-size:130%; margin-top:30px;">Podúloha: Backpropagation algoritmus</p>
+</center>
+<h3>Úloha:</h3>
+<p>
+V&nbsp;tejto úlohe budete implementovať plne funkčný algoritmus backpropagation, 
+ktorý je kľúčovým komponentom tréningu neurónovej siete. Umožňuje jej učiť sa 
+pomocou minimalizácie zadanej chybovej funkcie. Treba implementovať doprednú 
+aj spätnú časť pre jednotlivé operátory a&nbsp;funkcie, ako aj aktualizácie 
+parametrov siete. Algoritmus overíte natrénovaním jednoduchej doprednej 
+neurónovej siete (viacvrstvového perceptrónu).
+</p>
+<h3>Zadanie:</h3>
+<p>
+Na riešenie úlohy použite knižnicu <b>NumPy</b> pre maticové a&nbsp;vektorové operácie. 
+Použitie knižníc ako <em>PyTorch</em> a&nbsp;<em>TensorFlow</em>, ktoré obsahujú <code>autograd</code> je 
+<u><em>zakázané</em></u>. Implementujte modulárnu architektúru, v ktorej bude možné 
+jednotlivé moduly reťaziť. Implementácia bude obsahovať lineárnu vrstvu, 
+aktivačnú funkciu sigmoid, tanh, relu a&nbsp;chybovú funkciu MSE (mean squared 
+error).
+</p>
+<h3>Náčrt modelu:</h3>
+<ol>
+  <li>Pre validáciu algoritmu použite XOR problém, použite dvojvrstvovú sieť, 
+    ktorá bude mať na skrytej vrstve 4 neuróny, na výstupnej vrstve 1 neurón 
+	a&nbsp;trénovať sa bude pomocou MSE chybovej funkcie. Rýchlosť učenia môže byť 
+	0.1 až 0.01 a&nbsp;počet epoch by mal stačiť okolo 500.</li>
+  <li>Najskôr implementujte dopredný smer pre jednotlivé moduly a&nbsp;spojte ich 
+    do jedného modelu (zoznam modulov), ktorý vám zo vstupných údajov vráti 
+	výstup.</li>
+  <li>Začnite od MSE funkcie a&nbsp;pre každý modul spočítajte jeho deriváciu 
+    a&nbsp;implementujte spätný smer. Dajte si pozor, lebo pri počítaní derivácie 
+	je potrebné udržiavať aj niektoré výsledky z&nbsp;dopredného smeru. Moduly 
+	môžu mať svoj stav, alebo môžu byť aj bezstavové a&nbsp;výsledky môžu byť 
+	odložené niekde inde. To ponechávame na vašej voľbe.</li>
+  <li>Implementujte pravidlo pre aktualizáciu váh bez momentu a&nbsp;potom aj 
+    s&nbsp;momentom.</li>
+  <li>Volanie modelu by malo byť jednoduché, pre dopredný smer <code>model.forward(vstup)</code> 
+    a&nbsp;pre spätný smer <code>model.backward(chyba)</code> a&nbsp;následne 
+	volanie aktualizácie parametrov (či už to bude implementovať model, alebo 
+	iná samostatná trieda je opäť na vás).</li>
+</ol>
+<h3>Dokumentácia:</h3>
+<p>
+Dokumentácia má obsahovať jednoduchý popis vašej implementácie algoritmu 
+backpropagation. Vyskúšajte sieť s&nbsp;1&nbsp;a&nbsp;2 skrytými vrstvami pre problémy AND, 
+OR a&nbsp;XOR, k&nbsp;dokumentácii priložte grafy z&nbsp;priebehu tréningu (trénovacia 
+chyba). Vyskúšajte rôzne nastavenia tréningu s&nbsp;momentom a&nbsp;bez momentu 
+a&nbsp;aspoň 2 hodnoty rýchlosti učenia pre problém XOR.
+</p>
+
+<hr>
+</TD></TR></TABLE>
+</BODY>
+</HTML>

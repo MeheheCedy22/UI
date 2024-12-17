@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1250">
+<LINK REL="SHORTCUT ICON" HREF="UI3.ico">
+<TITLE>Klastrovanie</TITLE>
+</HEAD>
+<BODY BGCOLOR="#f0f4ff">
+<TABLE style=" max-width: 624pt; min-width: 280pt; margin: auto; background-color: white;" border="0"><TR><TD>
+<CENTER>
+<H2>Zadanie 2b – klastrovanie</H2>
+</CENTER>
+
+<p>
+Máme 2D priestor, ktorý má rozmery X a Y, v intervaloch od -5000 do +5000. 
+Tento 2D priestor vyplňte 20 bodmi, pričom každý bod má náhodne zvolenú 
+polohu pomocou súradníc X a Y. Každý bod má unikátne súradnice (t.j. 
+nemalo by byť viacej bodov na presne tom istom mieste).
+</p>
+<p>
+Po vygenerovaní 20 náhodných bodov vygenerujte ďalších 40000 bodov, avšak 
+tieto body nebudú generované úplne náhodne, ale nasledovným spôsobom:
+</p>
+<ol>
+<li>
+Náhodne vyberte jeden zo <b>všetkých doteraz vytvorených</b> bodov v 2D priestore. (nie len z prvých 20)<br>
+Ak je bod príliš blízko okraju, tak zredukujete príslušný interval, uvedený v nasledujúcich 
+dvoch krokoch.
+</li>
+<li>
+Vygenerujte náhodné číslo X_offset v intervale od -100 do +100
+</li>
+<li>
+Vygenerujte náhodné číslo Y_offset v intervale od -100 do +100
+</li>
+<li>
+Pridajte nový bod do 2D priestoru, ktorý bude mať súradnice ako náhodne 
+vybraný bod v kroku 1, pričom tieto súradnice budú posunuté o X_offset a Y_offset
+</li>
+</ol>
+<p>
+Vašou úlohou je naprogramovať zhlukovač pre 2D priestor, ktorý zanalyzuje 2D 
+priestor so všetkými jeho bodmi a rozdelí tento priestor na k zhlukov 
+(klastrov). <!-- kde k nadobúda hodnoty od 5 do 20  -->
+Implementujte rôzne verzie zhlukovača, konkrétne týmito algoritmami:
+</p>
+<ul>
+<li>
+k-means, kde stred je centroid
+</li>
+<li>
+k-means, kde stred je medoid
+</li>
+<!-- <li>
+aglomeratívne zhlukovanie, kde stred je centroid
+</li> -->
+<li>
+divízne zhlukovanie, kde stred je centroid
+</li>
+</ul>
+<p>
+Vyhodnocujte úspešnosť/chybovosť vášho zhlukovača. Za úspešný zhlukovač 
+považujeme taký, v ktorom <b>žiaden klaster nemá priemernú vzdialenosť bodov 
+od stredu viac ako 500</b>.
+</p>
+<p>
+Vizualizácia: pre každý z týchto experimentov vykreslite výslednú 2D plochu 
+tak, že označkujete (napr. vyfarbíte, očíslujete, zakrúžkujete) výsledné klastre.
+</p>
+<p>
+Dokumentácia musí obsahovať opis konkrétne použitých algoritmov a reprezentácie 
+údajov. Uveďte aj vizualizácie viacerých pokusov. 
+V závere zhodnoťte dosiahnuté výsledky ich porovnaním.
+</p>
+<p>
+<b>Poznámka:</b> Je vhodné použiť rôzne optimalizácie pre dostatočne efektívnu prácu 
+Vášho zhlukovača. Napríklad PyPy je implementácia programovacieho jazyka Python. PyPy často beží rýchlejšie 
+ako štandardná implementácia CPython, pretože PyPy používa just-in-time kompilátor. 
+Pypy nepodporuje niektoré grafické knižnice.
+</p>
+
+<p>
+Dva príklady vizualizácie:
+</p>
+<p>
+<img src="Klast2.jpg">
+</p>
+<p>
+<img src="Klast3.jpg">
+</p>
+<hr>
+</TD></TR></TABLE>
+</BODY>
+</HTML>
