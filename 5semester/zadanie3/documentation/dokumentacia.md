@@ -1,5 +1,5 @@
 # UI - Umelá inteligencia
-## Zadanie č. 3 - Umelé neurónové siete (verzia 3b)
+## Zadanie č.3 - Umelé neurónové siete (verzia 3b)
 
 ### Autor: Marek Čederle
 #### AIS ID: 121193
